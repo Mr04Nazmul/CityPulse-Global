@@ -34,10 +34,17 @@ jobs:
           . citypulse/.env
           set +a
           python3 citypulse/generate_config.py
+          test -f citypulse/general.yml
+          test ! -d citypulse/general.yml
+          test -s citypulse/general.yml
       - name: Validate Compose configuration
         run: docker compose --env-file citypulse/.env -f citypulse/compose.dev.yml config --quiet
       - name: Pull upstream container images
         run: docker compose --env-file citypulse/.env -f citypulse/compose.dev.yml pull
+      - name: Verify generated config mount source
+        run: |
+          test -f citypulse/general.yml || { echo 'Missing generated general.yml'; exit 1; }
+          stat citypulse/general.yml
       - name: Start local stack
         run: docker compose --env-file citypulse/.env -f citypulse/compose.dev.yml up -d
       - name: Probe app HTTP response

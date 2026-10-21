@@ -1,0 +1,34 @@
+name: CityPulse Free Web Deploy
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'citypulse-web/**'
+      - '.github/workflows/citypulse-pages.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: citypulse-pages
+  cancel-in-progress: true
+jobs:
+  validate-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate application files
+        run: |
+          test -s citypulse-web/index.html
+          grep -q 'CityPulse Global' citypulse-web/index.html
+          grep -q 'OpenStreetMap' citypulse-web/index.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: citypulse-web
+      - id: deployment
+        uses: actions/deploy-pages@v4

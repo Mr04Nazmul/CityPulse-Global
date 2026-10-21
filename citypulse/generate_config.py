@@ -15,5 +15,5 @@ needle = "FMS_DB_PASS: 'fms'"
 if source.count(needle) != 1:
     raise SystemExit("Expected upstream database password setting not found exactly once")
 dst.write_text(source.replace(needle, "FMS_DB_PASS: " + json.dumps(password)))
-dst.chmod(0o600)
+dst.chmod(0o644)  # The application runs as an unprivileged user inside Docker.
 print("Wrote development database config")

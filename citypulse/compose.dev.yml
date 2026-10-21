@@ -1,6 +1,5 @@
 # Development deployment using original FixMyStreet image and config.
-# WARNING: Password substitution does not automatically create the FMS PostgreSQL role.
-# Follow upstream first-run database initialization instructions.
+# Development only. Verify upstream database initialization and user privileges.
 services:
   nginx:
     image: nginx:1.27.2
@@ -27,7 +26,7 @@ services:
       FMS_DB_HOST: postgres
       FMS_DB_NAME: fixmystreet
       FMS_DB_USER: fms
-      FMS_DB_PASS: ${CITYPULSE_FMS_DB_PASSWORD:?set application db password}
+      FMS_DB_PASS: ${CITYPULSE_POSTGRES_PASSWORD:?set database password}
       FMS_ROOT: /var/www/fixmystreet/fixmystreet
       SUPERUSER_EMAIL: ${CITYPULSE_ADMIN_EMAIL:?set admin email}
       SUPERUSER_PASSWORD: ${CITYPULSE_ADMIN_PASSWORD:?set admin password}

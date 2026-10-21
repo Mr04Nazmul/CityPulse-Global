@@ -7,6 +7,9 @@ services:
     ports: ["127.0.0.1:8000:80"]
     volumes:
       - ../conf/nginx.conf-docker:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      default:
+        aliases: [nginx.svc]
   fixmystreet:
     image: fixmystreet/fixmystreet:stable
     depends_on:
@@ -22,8 +25,11 @@ services:
     tmpfs:
       - /run:size=100m
       - /run/lock:size=100m
+    networks:
+      default:
+        aliases: [fixmystreet.svc]
     environment:
-      FMS_DB_HOST: postgres
+      FMS_DB_HOST: postgres.svc
       FMS_DB_NAME: fixmystreet
       FMS_DB_USER: fms
       FMS_DB_PASS: ${CITYPULSE_POSTGRES_PASSWORD:?set database password}
@@ -39,6 +45,9 @@ services:
       PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - citypulse-pgdata:/var/lib/postgresql/data/pgdata
+    networks:
+      default:
+        aliases: [postgres.svc]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U fms -d fixmystreet"]
       interval: 5s
@@ -46,5 +55,8 @@ services:
       retries: 10
   memcached:
     image: memcached:1.6.32
+    networks:
+      default:
+        aliases: [memcached.svc]
 volumes:
   citypulse-pgdata:

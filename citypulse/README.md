@@ -26,7 +26,8 @@ This development compose is NOT a production deployment: it exposes an unauthent
 
 - [x] Fork the original upstream source and preserve history
 - [x] Add isolated local Compose configuration and environment template
-- [ ] Run integration tests and initial database migration
+- [x] Run GitHub Actions Docker smoke test (HTTP response verified on 2026-10-21; this does not prove production readiness)
+- [ ] Verify database migrations and full report creation flow
 - [ ] Configure place search, tiles, photo storage and outbound email
 - [ ] Choose login architecture; implement/test Supabase SSO only if required
 - [ ] Implement moderation policy, privacy checks and abuse handling

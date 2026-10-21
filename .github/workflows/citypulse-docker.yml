@@ -28,6 +28,8 @@ jobs:
             echo "CITYPULSE_ADMIN_EMAIL=admin@example.invalid"
             echo "CITYPULSE_ADMIN_PASSWORD=$(openssl rand -hex 24)"
           } > citypulse/.env
+      - name: Check config generator syntax
+        run: python3 -m py_compile citypulse/generate_config.py
       - name: Generate matching FixMyStreet database config
         run: |
           set -a
@@ -37,6 +39,15 @@ jobs:
           test -f citypulse/general.yml
           test ! -d citypulse/general.yml
           test -s citypulse/general.yml
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          config = Path('citypulse/general.yml').read_text()
+          assert 'FMS_DB_PASS: ' in config
+          assert "FMS_DB_PASS: 'fms'" not in config
+          assert Path('citypulse/general.yml').is_file()
+          print('Generated application config verified')
+          PY
       - name: Validate Compose configuration
         run: docker compose --env-file citypulse/.env -f citypulse/compose.dev.yml config --quiet
       - name: Pull upstream container images

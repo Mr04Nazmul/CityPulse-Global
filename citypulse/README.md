@@ -8,7 +8,7 @@ Prerequisites: Docker Engine with Compose, adequate memory, and Linux-compatible
 
 1. Copy `citypulse/.env.example` to `citypulse/.env`, replace all sample passwords with strong unique passwords, and do not commit the resulting file.
 2. Run `docker compose --env-file citypulse/.env -f citypulse/compose.dev.yml up --build`.
-3. Open http://localhost:8000 . The upstream application may need initialization and map/geocoder configuration before reports are fully functional.
+3. Open http://localhost:8000 . The upstream application may need initialization and map/geocoder configuration before reports are fully functional. If init fails, follow upstream Docker instructions before retrying.
 4. Shut down with `docker compose --env-file citypulse/.env -f citypulse/compose.dev.yml down`. Do not add `-v` unless you intend to delete the local database.
 
 This development compose is NOT a production deployment: it exposes an unauthenticated HTTP listener on localhost, and does not configure TLS, email verification, rate limiting, backups, privacy notices, reporting authority routing, or moderation approval.

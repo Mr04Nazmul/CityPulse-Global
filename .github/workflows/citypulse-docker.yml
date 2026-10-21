@@ -5,6 +5,9 @@ on:
     paths:
       - 'citypulse/**'
       - '.github/workflows/citypulse-docker.yml'
+concurrency:
+  group: citypulse-smoke-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:

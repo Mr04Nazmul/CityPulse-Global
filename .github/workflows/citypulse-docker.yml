@@ -25,6 +25,12 @@ jobs:
             echo "CITYPULSE_ADMIN_EMAIL=admin@example.invalid"
             echo "CITYPULSE_ADMIN_PASSWORD=$(openssl rand -hex 24)"
           } > citypulse/.env
+      - name: Generate matching FixMyStreet database config
+        run: |
+          set -a
+          . citypulse/.env
+          set +a
+          python3 citypulse/generate_config.py
       - name: Validate Compose configuration
         run: docker compose --env-file citypulse/.env -f citypulse/compose.dev.yml config --quiet
       - name: Pull upstream container images
@@ -51,4 +57,4 @@ jobs:
         if: always()
         run: |
           docker compose --env-file citypulse/.env -f citypulse/compose.dev.yml down --remove-orphans || true
-          rm -f citypulse/.env
+          rm -f citypulse/.env citypulse/general.yml

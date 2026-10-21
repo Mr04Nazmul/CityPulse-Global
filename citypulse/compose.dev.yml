@@ -18,6 +18,8 @@ services:
       memcached:
         condition: service_started
     stop_signal: SIGRTMIN+3
+    # Refresh Debian package indices before the upstream first-run installer.
+    command: ["/bin/sh", "-c", "apt-get update && exec /usr/local/bin/boot-debian-base"]
     cgroup: host
     volumes:
       - ./general.yml:/var/www/fixmystreet/fixmystreet/conf/general.yml:ro
